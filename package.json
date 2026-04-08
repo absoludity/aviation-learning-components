@@ -1,0 +1,27 @@
+{
+  "name": "aviation-learning-components",
+  "version": "0.1.0",
+  "description": "Interactive aviation training components",
+  "license": "MPL-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/absoludity/aviation-learning-components.git"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "three": "^0.183.2",
+    "vue-router": "^4.5.0"
+  },
+  "peerDependencies": {
+    "vue": "^3.0.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.1",
+    "vite": "^5.4.0",
+    "vue": "^3.5.0"
+  }
+}
