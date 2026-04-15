@@ -464,6 +464,7 @@ onMounted(async () => {
 
   const THREE      = await import('three')
   const { GLTFLoader }    = await import('three/examples/jsm/loaders/GLTFLoader.js')
+  const { DRACOLoader }   = await import('three/examples/jsm/loaders/DRACOLoader.js')
   const { OrbitControls } = await import('three/examples/jsm/controls/OrbitControls.js')
 
   const container = containerRef.value
@@ -591,8 +592,12 @@ onMounted(async () => {
     })
   })
 
-  // Load model (same as PiperViewer)
-  new GLTFLoader().load(props.modelPath, gltf => {
+  // Load model — Draco-compressed, so we need DRACOLoader
+  const dracoLoader = new DRACOLoader()
+  dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.7/')
+  const gltfLoader = new GLTFLoader()
+  gltfLoader.setDRACOLoader(dracoLoader)
+  gltfLoader.load(props.modelPath, gltf => {
     const obj = gltf.scene
     aircraftGroup.add(obj)
 
