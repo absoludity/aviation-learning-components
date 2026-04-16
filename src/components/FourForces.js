@@ -34,6 +34,8 @@ sheet.replaceSync(styles)
 const WEIGHT     = 0.7
 const T_MAX      = 0.5
 const BASE_ARROW = 1.5   // world units — arrow length at equilibrium
+const COMP_CONE_H = BASE_ARROW * 0.06  // weight-component arrowhead height
+const COMP_CONE_R = BASE_ARROW * 0.03  // weight-component arrowhead radius
 const LIFT_K     = 1.476
 const DRAG_K     = 6.894  // recalibrated for INV_PIARe = 0.060; T = D at 60%/+4°/v=1
 const CL0 = 0.30, CL_A = 2.5
@@ -179,6 +181,8 @@ class FourForcesElement extends HTMLElement {
     this._weightCompMat  = null
     this._weightCompPerp = null
     this._weightCompAlong = null
+    this._weightCompPerpArrow  = null
+    this._weightCompAlongArrow = null
     this._arrowHelpers   = {}
 
     // ── ASI speed limits (null = not configured) ─────────────────────────────
@@ -351,6 +355,18 @@ class FourForcesElement extends HTMLElement {
     this._weightCompPerp  = makeDashLine()
     this._weightCompAlong = makeDashLine()
 
+    // Cone arrowheads for weight component lines
+    const coneMat = new THREE.MeshBasicMaterial({ color: 0x60a5fa, transparent: true, opacity: 0 })
+    const makeCone = () => {
+      const geo  = new THREE.ConeGeometry(COMP_CONE_R, COMP_CONE_H, 10)
+      const mesh = new THREE.Mesh(geo, coneMat.clone())
+      mesh.visible = false
+      this._scene.add(mesh)
+      return mesh
+    }
+    this._weightCompPerpArrow  = makeCone()
+    this._weightCompAlongArrow = makeCone()
+
     // Particle stream — initialise positions scattered through the stream volume
     this._partPositions = new Float32Array(N_PART * 3)
     for (let i = 0; i < N_PART; i++) {
@@ -490,12 +506,27 @@ class FourForcesElement extends HTMLElement {
     const CL     = CL0 + CL_A * aoa
     const CD     = CD0 + CL * CL * INV_PIARe
     const q      = this._speed * this._speed
-    const lift   = CL * q * LIFT_K
     const drag   = CD * q * DRAG_K
     // Non-linear throttle mapping: display 60% → physics 60% (equilibrium), display 100% → physics 68%
     const d      = this._power
     const physP  = -0.008 * d * d + 1.48 * d
     const thrust = (physP / 100) * T_MAX
+
+    // Post-stall CL dropout: below VS1 (when CL is positive), lift drops as (v/VS1)²
+    const vs1Norm     = (this._vs1 && this._cruiseKts) ? this._vs1 / this._cruiseKts : 0
+    const stallFactor = (vs1Norm > 0 && CL > 0 && this._speed < vs1Norm)
+      ? (this._speed / vs1Norm) ** 2
+      : 1.0
+    const lift = CL * q * LIFT_K * stallFactor
+
+    // Stall nose-drop: push attitude forward proportional to stall depth
+    if (stallFactor < 1.0) {
+      const pitchDown = (1.0 - stallFactor) * 15 * DT  // up to 15 °/s at full stall
+      this._attitude = Math.max(-20, this._attitude - pitchDown)
+      this._attitudeSlider.value = this._attitude
+      this._attitudeDisplay.textContent =
+        `${this._attitude > 0 ? '+' : ''}${this._attitude.toFixed(1)}\u00b0`
+    }
 
     this._forces.lift   = Math.max(0.04, (lift   / WEIGHT) * BASE_ARROW)
     this._forces.weight = BASE_ARROW
@@ -518,7 +549,9 @@ class FourForcesElement extends HTMLElement {
     // Using v_eq (not transient speed) so that pitching up immediately raises VSI
     // while the ASI needle drifts down separately as speed settles.
     const dragEq    = CD * vEq * vEq * DRAG_K
-    const vsiTarget = vEq * (thrust - dragEq) / WEIGHT * K_VSI
+    // In stall: power term scales down with stallFactor; lift deficit drives additional sink
+    const vsiTarget = stallFactor * vEq * (thrust - dragEq) / WEIGHT * K_VSI
+                      - (1.0 - stallFactor)
     this._vsi       += (vsiTarget - this._vsi) * DT
     this._smoothVsi  = this._smoothVsi * 0.93 + this._vsi * 0.07
   }
@@ -622,6 +655,28 @@ class FourForcesElement extends HTMLElement {
     const ORIGIN = new THREE.Vector3()
     setLine(this._weightCompPerp,  ORIGIN,  perpEnd)
     setLine(this._weightCompAlong, perpEnd, weightTip)
+
+    // Fade cone arrowheads in as the horizontal component grows.
+    // Both share the same opacity so they appear/disappear together.
+    const CONE_H = COMP_CONE_H
+    const alongLen = weightTip.clone().sub(perpEnd).length()
+    const coneOpacity = Math.min(1, alongLen / (CONE_H * 2))
+
+    if (coneOpacity < 0.01) {
+      this._weightCompPerpArrow.visible  = false
+      this._weightCompAlongArrow.visible = false
+    } else {
+      const Y_AXIS = new THREE.Vector3(0, 1, 0)
+      const placeCone = (cone, start, end) => {
+        const dir  = end.clone().sub(start).normalize()
+        cone.quaternion.setFromUnitVectors(Y_AXIS, dir)
+        cone.position.copy(end).addScaledVector(dir, -CONE_H * 0.5)
+        cone.material.opacity = coneOpacity
+        cone.visible = true
+      }
+      placeCone(this._weightCompPerpArrow,  ORIGIN,  perpEnd)
+      placeCone(this._weightCompAlongArrow, perpEnd, weightTip)
+    }
   }
 
   // ── Particle stream ───────────────────────────────────────────────────────────
@@ -843,6 +898,10 @@ class FourForcesElement extends HTMLElement {
     this._partGeo?.dispose()
     this._weightCompPerp?.geometry.dispose()
     this._weightCompAlong?.geometry.dispose()
+    this._weightCompPerpArrow?.geometry.dispose()
+    this._weightCompPerpArrow?.material.dispose()
+    this._weightCompAlongArrow?.geometry.dispose()
+    this._weightCompAlongArrow?.material.dispose()
 
     this._animFrameId   = null
     this._sceneReady    = false
