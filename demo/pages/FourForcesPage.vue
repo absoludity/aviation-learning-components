@@ -10,35 +10,50 @@
     </p>
 
     <div class="demo-container">
-      <FourForces height="500px" model-path="/aviation-learning-components/aircraft.glb" />
+      <four-forces height="500px" model-path="/aviation-learning-components/aircraft.glb"
+        v_ne="45" v_no="35" v_1="22" cruise-kts="30"></four-forces>
     </div>
 
     <h2>Usage</h2>
-    <pre class="code"><code>&lt;script setup&gt;
-import FourForces from 'aviation-learning-components/src/components/FourForces.vue'
-&lt;/script&gt;
+    <pre class="code"><code>import 'aviation-learning-components'
 
-&lt;template&gt;
-  &lt;FourForces height="400px" model-path="/path/to/aircraft.glb" /&gt;
-&lt;/template&gt;</code></pre>
+&lt;four-forces height="400px" model-path="/path/to/aircraft.glb"&gt;&lt;/four-forces&gt;</code></pre>
 
-    <h2>Props</h2>
+    <h2>Attributes</h2>
     <table>
       <thead>
-        <tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+        <tr><th>Attribute</th><th>Default</th><th>Description</th></tr>
       </thead>
       <tbody>
         <tr>
           <td><code>height</code></td>
-          <td>String</td>
-          <td><code>'400px'</code></td>
-          <td>CSS height of the component container</td>
+          <td><code>400px</code></td>
+          <td>CSS height of the component</td>
         </tr>
         <tr>
-          <td><code>modelPath</code></td>
-          <td>String</td>
-          <td><code>'/aircraft.glb'</code></td>
+          <td><code>model-path</code></td>
+          <td><code>/aircraft.glb</code></td>
           <td>URL to the GLTF aircraft model file. Must be served as a static asset.</td>
+        </tr>
+        <tr>
+          <td><code>v_ne</code></td>
+          <td>—</td>
+          <td>Never-exceed speed (kts). Sets ASI scale maximum and draws red radial line.</td>
+        </tr>
+        <tr>
+          <td><code>v_no</code></td>
+          <td>—</td>
+          <td>Normal operating speed (kts). Top of green arc, bottom of yellow arc.</td>
+        </tr>
+        <tr>
+          <td><code>v_1</code></td>
+          <td>—</td>
+          <td>Stall speed clean (kts). Bottom of green arc.</td>
+        </tr>
+        <tr>
+          <td><code>cruise-kts</code></td>
+          <td><code>100</code></td>
+          <td>Airspeed at nominal cruise (speed=1.0). Calibrates the ASI needle to the aircraft's actual speed range.</td>
         </tr>
       </tbody>
     </table>
@@ -50,7 +65,7 @@ import FourForces from 'aviation-learning-components/src/components/FourForces.v
 </template>
 
 <script setup>
-import FourForces from '../../src/components/FourForces.vue'
+import '../../src/components/FourForces.js'
 </script>
 
 <style scoped>

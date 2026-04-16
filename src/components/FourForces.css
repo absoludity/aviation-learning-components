@@ -1,0 +1,99 @@
+:host {
+  display: block;
+}
+
+.ff-root {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  background: white;
+  height: 100%;
+}
+
+.ff-root canvas:first-child {
+  display: block;
+  position: absolute;
+  inset: 0;
+}
+
+.ff-loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  font-size: 14px;
+  z-index: 10;
+}
+
+/* Gauge canvas: fixed size, top-right */
+.ff-gauge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 260px;
+  height: 115px;
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* Arrow labels: absolute, positioned each frame via JS */
+.ff-label {
+  position: absolute;
+  font-family: monospace;
+  font-size: 12px;
+  font-weight: 700;
+  pointer-events: none;
+  z-index: 6;
+  text-shadow: 0 0 4px white, 0 0 8px white;
+  transform: translate(-50%, -50%);
+}
+
+/* Control bar */
+.ff-bar {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  right: 8px;
+  display: flex;
+  z-index: 10;
+  background: rgba(10, 15, 30, 0.75);
+  border: 1px solid #1e293b;
+  border-radius: 6px;
+  backdrop-filter: blur(4px);
+}
+
+.ff-cell {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  color: #e2e8f0;
+  font-size: 12px;
+  font-family: monospace;
+  border-right: 1px solid #1e293b;
+}
+
+.ff-cell:last-child {
+  border-right: none;
+}
+
+.ff-cell input[type="range"] {
+  flex: 1;
+  accent-color: #475569;
+  cursor: pointer;
+}
+
+.ff-cell-label {
+  font-weight: 700;
+  white-space: nowrap;
+  color: #94a3b8;
+}
+
+.ff-cell-value {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  text-align: right;
+}
