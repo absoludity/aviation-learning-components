@@ -9,9 +9,16 @@
       climbs. Supports cross-tab synchronization via BroadcastChannel for presenter/slide pairing.
     </p>
 
+    <div class="demo-controls">
+      <label class="toggle">
+        <input type="checkbox" v-model="banking" />
+        <span>banking</span>
+      </label>
+    </div>
+
     <div class="demo-container">
       <four-forces height="500px" model-path="/aviation-learning-components/aircraft.glb"
-        v_ne="45" v_no="35" v_1="22" cruise-kts="30" banking></four-forces>
+        v_ne="45" v_no="35" v_1="22" cruise-kts="30" :banking="banking || undefined"></four-forces>
     </div>
 
     <h2>Usage</h2>
@@ -70,7 +77,10 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import '../../src/components/FourForces.js'
+
+const banking = ref(true)
 </script>
 
 <style scoped>
@@ -99,6 +109,30 @@ h2 {
   line-height: 1.6;
   margin-bottom: 1.5rem;
   max-width: 70ch;
+}
+
+.demo-controls {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  color: #94a3b8;
+  font-size: 0.9rem;
+  font-family: monospace;
+  user-select: none;
+}
+
+.toggle input {
+  accent-color: #38bdf8;
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
 }
 
 .demo-container {

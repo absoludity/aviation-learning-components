@@ -627,8 +627,15 @@ class FourForcesElement extends HTMLElement {
     // Using v_eq (not transient speed) so that pitching up immediately raises VSI
     // while the ASI needle drifts down separately as speed settles.
     const dragEq    = CD * vEq * vEq * DRAG_K
+    // Banking reduces the component of lift perpendicular to the flight path below
+    // the component of weight perpendicular to the flight path (W·cos γ ≈ W for small γ),
+    // causing the aircraft to sink unless the pilot adds back-pressure or power.
+    const bankRad      = this._bankDeg * Math.PI / 180
+    const liftPerpPath = lift * Math.cos(bankRad)
+    const bankSink     = (liftPerpPath - WEIGHT) / WEIGHT  // ≤ 0 whenever banking reduces lift_⊥ below W
     // In stall: power term scales down with stallFactor; lift deficit drives additional sink
     const vsiTarget = stallFactor * vEq * (thrust - dragEq) / WEIGHT * K_VSI
+                      + bankSink
                       - (1.0 - stallFactor)
     this._vsi       += (vsiTarget - this._vsi) * DT
     this._smoothVsi  = this._smoothVsi * 0.93 + this._vsi * 0.07

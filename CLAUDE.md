@@ -12,32 +12,39 @@ npm run preview   # Preview production build locally
 
 No test or lint commands are configured.
 
+## Commit style
+
+Do **not** add `Co-Authored-By` trailers. The developer is solely responsible for authorship of all commits, regardless of tooling used.
+
 ## Architecture
 
-This is a **Vue 3 component library** for interactive aviation training visualizations, deployed as a GitHub Pages demo at https://absoludity.github.io/aviation-learning-components/.
+This is a **web component library** for interactive aviation training visualizations, deployed as a GitHub Pages demo at https://absoludity.github.io/aviation-learning-components/.
 
-**Stack:** Vue 3 + Vite + Three.js (3D rendering)
+**Stack:** Vite + Three.js (3D rendering). Components are plain custom elements (`HTMLElement` subclasses). Vue 3 is used only in the demo app, not in the library itself.
 
-**Library entry:** `src/index.js` exports `FourForces` — the only component so far. The intent is to eventually migrate to web components.
+**Library entry:** `src/index.js` registers `FourForces` — the only component so far.
 
-**Demo app** (`demo/`) is a separate Vue Router app that imports and showcases the components. It is not part of the library distribution.
+**Demo app** (`demo/`) is a Vue Router app that imports and showcases the components. It is not part of the library distribution.
 
-### FourForces component (`src/components/FourForces.vue`)
+### FourForces component (`src/components/FourForces.js`)
 
-The core component (~761 lines) is a self-contained 3D aerodynamic force visualizer. Key internals:
+The core component is a self-contained 3D aerodynamic force visualizer implemented as a custom element (`FourForcesElement extends HTMLElement`). Key internals:
 
 - **Three.js scene** — renderer, orbit-controlled camera, loads `aircraft.glb` (GLTF)
 - **Physics tick loop** — computes lift, drag, thrust, speed convergence, and VSI each frame using aerodynamic coefficients (CL, CD). Power and attitude sliders drive the simulation.
-- **Arrow objects** — scaled 3D arrows for each of the four forces; `updateArrows()` repositions them each tick
-- **2D label overlay** — `updateLabels()` projects 3D arrow tips to screen coordinates and positions absolutely-placed HTML labels
-- **Weight component decomposition** — `updateWeightComponents()` shows weight resolved along and perpendicular to the flight path during climbs/descents
+- **Arrow objects** — scaled 3D arrows for each of the four forces; `_updateArrows()` repositions them each tick
+- **2D label overlay** — `_updateLabels()` projects 3D arrow tips to screen coordinates and positions absolutely-placed HTML labels
+- **Weight component decomposition** — `_updateWeightComponents()` shows weight resolved along and perpendicular to the flight path during climbs/descents
+- **Lift component decomposition** — `_updateLiftComponents()` (shown when `banking` attribute is set) shows lift resolved into vertical and horizontal components in the plane perpendicular to airflow
 - **Particle system** — 120 particles animate an airflow stream
-- **Gauge canvas** — ASI and VSI instruments drawn imperatively onto an overlay `<canvas>`
+- **Gauge canvas** — ASI and VSI instruments drawn imperatively onto an overlay `<canvas>`; attitude indicator includes bank rotation
 - **BroadcastChannel** — syncs state across browser tabs
 
-**Props:**
-- `height` (String, default `'400px'`)
-- `modelPath` (String, default `'/aircraft.glb'`) — URL to the GLTF model
+**Attributes:**
+- `height` (default `'400px'`) — CSS height of the component
+- `model-path` (default `'/aircraft.glb'`) — URL to the GLTF model
+- `v_ne`, `v_no`, `v_1`, `cruise-kts` — airspeed envelope values for ASI gauge
+- `banking` — boolean; when present, shows bank angle slider and lift component decomposition
 
 ### Slidev compatibility
 
