@@ -1,6 +1,6 @@
 # Task 0001 — Rename and move repository to open-aviation-solutions org
 
-**Status:** Pending
+**Status:** Complete
 
 ## Goal
 
