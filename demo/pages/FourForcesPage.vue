@@ -21,6 +21,10 @@
         model-rotation="0,90,0" model-offset="0,-0.1,0"
         v_ne="45" v_no="35" v_1="22" cruise-kts="30" :banking="banking || undefined"></four-forces>
     </div>
+    <p class="attribution">
+      Aircraft: <a href="https://sketchfab.com/3d-models/bristol-f2b-first-world-war-airplane-1df44f8ecf0b4b3888e07f841c1197ce" target="_blank" rel="noopener">Bristol F.2B (First World War)</a>
+      — public domain, Canadian Ingenium museum
+    </p>
 
     <h2>Usage</h2>
     <pre class="code"><code>import 'aviation-learning-components'
@@ -139,7 +143,18 @@ h2 {
 .demo-container {
   border-radius: 12px;
   overflow: hidden;
-  margin-bottom: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.attribution {
+  font-size: 0.75rem;
+  color: #475569;
+  margin-bottom: 1.5rem;
+}
+
+.attribution a {
+  color: #64748b;
+  text-decoration: underline;
 }
 
 .code {
