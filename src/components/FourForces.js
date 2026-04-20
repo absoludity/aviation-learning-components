@@ -173,17 +173,6 @@ class FourForcesElement extends HTMLElement {
       this._attitude = +e.target.value
       this._broadcastSlider('attitude', this._attitude)
     })
-    // ArrowUp/Down native behaviour increases/decreases value, which is the wrong
-    // direction (up should push nose down). Intercept and invert those keys.
-    this._attitudeSlider.addEventListener('keydown', e => {
-      if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return
-      e.preventDefault()
-      const step  = +this._attitudeSlider.step
-      const delta = e.key === 'ArrowUp' ? -step : +step
-      this._attitude = Math.max(-20, Math.min(20, this._attitude + delta))
-      this._attitudeSlider.value = this._attitude
-      this._broadcastSlider('attitude', this._attitude)
-    })
     this._bankSlider.addEventListener('input', e => {
       this._bankDeg = +e.target.value
       this._broadcastSlider('bank', this._bankDeg)
@@ -239,9 +228,17 @@ class FourForcesElement extends HTMLElement {
 
     // Stable bound reference for requestAnimationFrame
     this._boundLoop = this._loop.bind(this)
+
+    // Make host element focusable so keyboard events target it rather than the page
+    this.tabIndex = 0
+    this.style.outline = 'none'
+    // Clicking anywhere inside (canvas, sliders, etc.) brings focus to the host element
+    this.addEventListener('pointerdown', () => this.focus())
+    this._boundKeyDown = this._handleGlobalKeyDown.bind(this)
   }
 
   connectedCallback() {
+    this.addEventListener('keydown', this._boundKeyDown)
     this._applyHeight()
     this._startScene()
 
@@ -257,6 +254,7 @@ class FourForcesElement extends HTMLElement {
   }
 
   disconnectedCallback() {
+    this.removeEventListener('keydown', this._boundKeyDown)
     this._teardown()
     this._intersectionObserver?.disconnect()
     this._intersectionObserver = null
@@ -275,6 +273,48 @@ class FourForcesElement extends HTMLElement {
   // ── Height ──────────────────────────────────────────────────────────────────
   _applyHeight() {
     this.style.height = this.getAttribute('height') || '400px'
+  }
+
+  // ── Global keyboard controls ─────────────────────────────────────────────────
+  // Fires only when this element (or a child) has focus — see tabIndex + pointerdown in constructor.
+  _handleGlobalKeyDown(e) {
+    // e.preventDefault() on a range-input keydown suppresses the browser's native
+    // slider movement, so the input listener won't fire and state is updated once here.
+    switch (e.key) {
+      case 'ArrowUp':
+      case 'ArrowDown': {
+        e.preventDefault()
+        const step = +this._attitudeSlider.step
+        // ArrowUp = nose down (joystick convention, matching original slider handler)
+        const delta = e.key === 'ArrowUp' ? -step : +step
+        this._attitude = Math.max(-20, Math.min(20, this._attitude + delta))
+        this._attitudeSlider.value = this._attitude
+        this._broadcastSlider('attitude', this._attitude)
+        break
+      }
+      case 'ArrowLeft':
+      case 'ArrowRight': {
+        if (!this.hasAttribute('banking')) return
+        e.preventDefault()
+        const step = +this._bankSlider.step
+        const delta = e.key === 'ArrowLeft' ? -step : +step
+        this._bankDeg = Math.max(-60, Math.min(60, this._bankDeg + delta))
+        this._bankSlider.value = this._bankDeg
+        this._broadcastSlider('bank', this._bankDeg)
+        break
+      }
+      case 'PageUp':
+      case 'PageDown': {
+        e.preventDefault()
+        const step = +this._powerSlider.step
+        const delta = e.key === 'PageUp' ? +step : -step
+        this._power = Math.max(0, Math.min(100, this._power + delta))
+        this._powerSlider.value = this._power
+        this._powerDisplay.textContent = `${this._power}%`
+        this._broadcastSlider('power', this._power)
+        break
+      }
+    }
   }
 
   // ── Speed limits ─────────────────────────────────────────────────────────────
