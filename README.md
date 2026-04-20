@@ -1,8 +1,8 @@
-# aviation-learning-components
+# open-aviation-components
 
-Interactive components for aviation training. Currently implemented as Vue 3 single-file components, with a view to migrating to standard web components in future.
+Interactive components for aviation training, implemented as standard web components (custom elements). Framework-agnostic — use them in plain HTML, Vue, React, Svelte, Slidev, or anywhere else custom elements are supported.
 
-**Live demo:** https://absoludity.github.io/aviation-learning-components/
+**Live demo:** https://open-aviation-solutions.github.io/open-aviation-components/
 
 ---
 
@@ -26,24 +26,29 @@ npm install three
 
 ### Usage
 
-```vue
-<script setup>
-import FourForces from 'aviation-learning-components/src/components/FourForces.vue'
-</script>
+Import the package once (anywhere in your app's entry point) to register the custom elements, then use them as HTML tags:
 
-<template>
-  <FourForces height="400px" model-path="/path/to/aircraft.glb" />
-</template>
+```js
+import 'open-aviation-components'
+```
+
+```html
+<four-forces height="400px" model-path="/aircraft.glb"></four-forces>
 ```
 
 You will need to serve the `aircraft.glb` file as a static asset. A copy is included in the `public/` directory of this repository.
 
-### Props
+### Attributes
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `height` | String | `'400px'` | CSS height of the component container |
-| `modelPath` | String | `'/aircraft.glb'` | URL to the GLTF aircraft model served as a static asset |
+| Attribute | Default | Description |
+|-----------|---------|-------------|
+| `height` | `400px` | CSS height of the component |
+| `model-path` | `/aircraft.glb` | URL to the GLTF aircraft model served as a static asset |
+| `v_ne` | — | Never-exceed speed (kts). Sets ASI scale maximum and draws red radial line. |
+| `v_no` | — | Normal operating speed (kts). Top of green arc, bottom of yellow arc. |
+| `v_1` | — | Stall speed clean (kts). Bottom of green arc. |
+| `cruise-kts` | `100` | Airspeed at nominal cruise (speed=1.0). Calibrates the ASI needle. |
+| `banking` | — | Boolean. When present, shows a bank angle slider and lift-component decomposition. |
 
 ### Using in a Slidev project
 
@@ -59,7 +64,7 @@ export default {
   resolve: {
     alias: {
       '@slidev/client': fileURLToPath(
-        new URL('./node_modules/aviation-learning-components/src/slidev-stub.js', import.meta.url)
+        new URL('./node_modules/open-aviation-components/src/slidev-stub.js', import.meta.url)
       ),
     },
   },

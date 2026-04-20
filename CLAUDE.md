@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```bash
-npm run dev       # Start Vite dev server (http://localhost:5173/aviation-learning-components/)
+npm run dev       # Start Vite dev server (http://localhost:5173/open-aviation-components/)
 npm run build     # Build demo app + library to dist/
 npm run preview   # Preview production build locally
 ```
@@ -22,7 +22,7 @@ Do **not** add `Co-Authored-By` trailers. The developer is solely responsible fo
 
 ## Architecture
 
-This is a **web component library** for interactive aviation training visualizations, deployed as a GitHub Pages demo at https://absoludity.github.io/aviation-learning-components/.
+This is a **web component library** for interactive aviation training visualizations, deployed as a GitHub Pages demo at https://open-aviation-solutions.github.io/open-aviation-components/.
 
 **Stack:** Vite + Three.js (3D rendering). Components are plain custom elements (`HTMLElement` subclasses). Vue 3 is used only in the demo app, not in the library itself.
 
@@ -56,4 +56,4 @@ The component imports `useSlideContext` from `@slidev/client`. The `vite.config.
 
 ### Deployment
 
-`vite.config.js` sets `base: '/aviation-learning-components/'` for GitHub Pages. The `dist/` output of `npm run build` is what gets deployed.
+`vite.config.js` sets `base: '/open-aviation-components/'` for GitHub Pages. The `dist/` output of `npm run build` is what gets deployed.

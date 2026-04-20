@@ -10,7 +10,7 @@
         </li>
       </ul>
       <div class="sidebar-footer">
-        <a href="https://github.com/absoludity/aviation-learning-components" target="_blank" rel="noopener">
+        <a href="https://github.com/open-aviation-solutions/open-aviation-components" target="_blank" rel="noopener">
           GitHub
         </a>
       </div>

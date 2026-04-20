@@ -1,12 +1,12 @@
 {
-  "name": "aviation-learning-components",
+  "name": "open-aviation-components",
   "version": "0.1.0",
   "description": "Interactive aviation training components",
   "exports": { ".": "./src/index.js" },
   "license": "MPL-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/absoludity/aviation-learning-components.git"
+    "url": "https://github.com/open-aviation-solutions/open-aviation-components.git"
   },
   "scripts": {
     "dev": "vite",

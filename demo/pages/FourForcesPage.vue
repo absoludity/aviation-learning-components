@@ -17,7 +17,7 @@
     </div>
 
     <div class="demo-container">
-      <four-forces height="500px" model-path="/aviation-learning-components/aircraft.glb"
+      <four-forces height="500px" model-path="/open-aviation-components/aircraft.glb"
         model-rotation="0,90,0" model-offset="0,-0.1,0"
         v_ne="45" v_no="35" v_1="22" cruise-kts="30" :banking="banking || undefined"></four-forces>
     </div>
@@ -27,7 +27,7 @@
     </p>
 
     <h2>Usage</h2>
-    <pre class="code"><code>import 'aviation-learning-components'
+    <pre class="code"><code>import 'open-aviation-components'
 
 &lt;four-forces height="400px" model-path="/path/to/aircraft.glb"&gt;&lt;/four-forces&gt;</code></pre>
 
