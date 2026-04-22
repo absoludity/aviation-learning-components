@@ -4,7 +4,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import styles from './FourForces.css?inline'
+import styles from './index.css?inline'
 
 // ── Constructable stylesheet (shared across all instances) ────────────────────
 const sheet = new CSSStyleSheet()

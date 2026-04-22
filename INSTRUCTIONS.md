@@ -1,4 +1,4 @@
-# CLAUDE.md
+# INSTRUCTIONS.md
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
@@ -30,29 +30,15 @@ This is a **web component library** for interactive aviation training visualizat
 
 **Demo app** is a plain multi-page HTML site. The landing page at the project root (`index.html`) links to each component demo, which lives in its own top-level directory (e.g. `four-forces/index.html` + `four-forces/main.js`). Shared infrastructure — `demo/shared.css`, `demo/sidebar.js` (single source of truth for nav entries), and `demo/landing.js` — lives under `demo/`. Each component demo's `main.js` imports `shared.css`, calls `renderSidebar(<slug>)`, and wires up any per-page controls. Adding a new component means adding a top-level directory with `index.html` + `main.js`, declaring it as a Vite input in `vite.config.js`, and appending an entry to the `NAV` array in `demo/sidebar.js`. The demo is not part of the library distribution.
 
-### FourForces component (`src/components/FourForces.js`)
+Component-specific instructions live alongside each component's source (e.g. `src/components/FourForces/INSTRUCTIONS.md`).
 
-The core component is a self-contained 3D aerodynamic force visualizer implemented as a custom element (`FourForcesElement extends HTMLElement`). Key internals:
+## Naming conventions
 
-- **Three.js scene** — renderer, orbit-controlled camera, loads `aircraft.glb` (GLTF)
-- **Physics tick loop** — computes lift, drag, thrust, speed convergence, and VSI each frame using aerodynamic coefficients (CL, CD). Power and attitude sliders drive the simulation.
-- **Arrow objects** — scaled 3D arrows for each of the four forces; `_updateArrows()` repositions them each tick
-- **2D label overlay** — `_updateLabels()` projects 3D arrow tips to screen coordinates and positions absolutely-placed HTML labels
-- **Weight component decomposition** — `_updateWeightComponents()` shows weight resolved along and perpendicular to the flight path during climbs/descents
-- **Lift component decomposition** — `_updateLiftComponents()` (shown when `banking` attribute is set) shows lift resolved into vertical and horizontal components in the plane perpendicular to airflow
-- **Particle system** — 120 particles animate an airflow stream
-- **Gauge canvases** — ASI and VSI instruments drawn imperatively onto separate overlay `<canvas>` elements (`.ff-gauge-asi` top-left, `.ff-gauge-vsi` top-right); attitude indicator includes bank rotation
-- **BroadcastChannel** — syncs state across browser tabs
-
-**Attributes:**
-- `height` (default `'400px'`) — CSS height of the component
-- `model-path` (default `'/aircraft.glb'`) — URL to the GLTF model
-- `v_ne`, `v_no`, `v_1`, `cruise-kts` — airspeed envelope values for ASI gauge
-- `banking` — boolean; when present, shows bank angle slider and lift component decomposition
-
-### Slidev compatibility
-
-The component imports `useSlideContext` from `@slidev/client`. The `vite.config.js` aliases this to `src/slidev-stub.js` so the component works outside Slidev without changes.
+- **Component source directory:** `src/components/<ComponentName>/` — PascalCase matching the class name (e.g. `FourForces/`)
+- **Component CSS:** `src/components/<ComponentName>/index.css` — always `index.css`, not a named file
+- **Demo directory:** kebab-case at the project root, matching the HTML element tag (e.g. `four-forces/`)
+- **Nav slug** in `demo/sidebar.js`: kebab-case matching the demo directory name (e.g. `'four-forces'`)
+- **HTML custom element tag:** kebab-case per the HTML spec (e.g. `<four-forces>`)
 
 ### Deployment
 

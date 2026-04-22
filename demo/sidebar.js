@@ -1,5 +1,5 @@
 const NAV = [
-  { slug: 'four-forces', label: 'FourForces', href: '/open-aviation-components/four-forces/' },
+  { slug: 'four-forces', label: 'Four Forces', href: '/open-aviation-components/four-forces/' },
 ]
 
 export function renderSidebar(activeSlug) {
