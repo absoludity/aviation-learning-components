@@ -6,7 +6,7 @@ export { FourForcesElement } from './components/FourForces'
 export { ClimbPerformanceElement } from './components/ClimbPerformance'
 export { FlightPathOverviewElement } from './components/FlightPathOverview'
 export {
-  recordDeparture,
+  setEstimatedTimes,
   resetTimer,
   resetFlightPlan,
   type Topic,

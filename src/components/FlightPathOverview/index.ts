@@ -14,7 +14,6 @@ import {
   getVarianceMinutes,
   getFlightTopics,
   getFlightArrivalLabel,
-  recordDeparture,
   setWaypointActual,
   setArrivalActual,
   setVariance,
@@ -172,7 +171,6 @@ class FlightPathOverviewElement extends HTMLElement {
   private _topics: Topic[] | null = null
   private _planePosition = 0
   private _arrivalLabel: string | null = null
-  private _departureOffset = 0
 
   private _animX = 50
   private _animY = 247
@@ -429,29 +427,20 @@ class FlightPathOverviewElement extends HTMLElement {
   }
 
   private _setPlanePosition(pos: number): void {
-    const prevPos = this._planePosition
     this._planePosition = pos
 
-    if (prevPos === 0 && pos === 1 && getDepartureTime() === null) {
-      recordDeparture()
-      this._departureOffset = 1
-      // Subscriber will fire _renderTransform when recordDeparture notifies.
-      return
-    }
-
-    const displayPos = pos - this._departureOffset
     const waypointCount = this._resolvedWaypoints.length
     const departureTime = getDepartureTime()
     const topics = this._resolvedTopics
 
     if (departureTime !== null && topics !== null) {
-      if (displayPos >= 1 && displayPos <= waypointCount) {
+      if (pos >= 1 && pos <= waypointCount) {
         const now = Date.now()
-        const planned = plannedElapsedAt(topics, displayPos)
+        const planned = plannedElapsedAt(topics, pos)
         const actual = (now - departureTime) / 60000
         setVariance(actual - planned)
-        setWaypointActual(displayPos - 1, now)
-      } else if (displayPos > waypointCount) {
+        setWaypointActual(pos - 1, now)
+      } else if (pos > waypointCount) {
         setArrivalActual(Date.now())
         setVariance(null)
       } else {
@@ -461,7 +450,7 @@ class FlightPathOverviewElement extends HTMLElement {
       setVariance(null)
     }
 
-    this._animateTo(displayPos)
+    this._animateTo(pos)
   }
 
   private _animateTo(displayPos: number): void {

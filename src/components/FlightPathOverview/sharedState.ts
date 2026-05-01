@@ -5,10 +5,8 @@
  */
 
 // Module-scoped state shared by every <flight-path-overview> on the page.
-// Mirrors the Vue composables `useFlightTimer` / `useFlightPlan` from the slides
-// project: a single flight plan + a single set of recorded actual times are
-// reused across every instance, so consecutive slides showing the same plan
-// stay in sync.
+// A single flight plan and a single set of recorded actual times are reused
+// across every instance, so consecutive views of the same plan stay in sync.
 
 export type Topic = {
   label: string
@@ -37,9 +35,10 @@ export function getVarianceMinutes(): number | null { return _varianceMinutes }
 export function getFlightTopics(): Topic[] | null { return _flightTopics }
 export function getFlightArrivalLabel(): string { return _flightArrivalLabel }
 
-export function recordDeparture(): void {
-  if (_departureTime !== null) return
-  _departureTime = Date.now()
+export function setEstimatedTimes(departureTime?: number): void {
+  const t = departureTime ?? Date.now()
+  if (_departureTime === t) return
+  _departureTime = t
   notify()
 }
 

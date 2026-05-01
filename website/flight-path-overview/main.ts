@@ -1,7 +1,7 @@
 import '../demo/shared.css'
 import { renderSidebar } from '../demo/sidebar'
 import '../../src/components/FlightPathOverview'
-import { resetTimer, resetFlightPlan } from '../../src/components/FlightPathOverview/sharedState'
+import { setEstimatedTimes, resetTimer, resetFlightPlan } from '../../src/components/FlightPathOverview/sharedState'
 
 renderSidebar('flight-path-overview')
 
@@ -30,6 +30,9 @@ slider.addEventListener('input', () => update(parseInt(slider.value, 10)))
 prevButton.addEventListener('click', () => update(Math.max(0, parseInt(slider.value, 10) - 1)))
 nextButton.addEventListener('click', () => update(Math.min(parseInt(slider.max, 10), parseInt(slider.value, 10) + 1)))
 
+document.getElementById('startFlight')!.addEventListener('click', () => {
+  setEstimatedTimes()
+})
 document.getElementById('resetTimer')!.addEventListener('click', () => {
   resetTimer()
   update(0)

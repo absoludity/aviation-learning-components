@@ -31,4 +31,4 @@ import '../../src/components/FlightPathOverview'
 
 ## Slider max for flight-path-overview demos
 
-The sequential `plane-position` range is `0` through `topics.length + 1` — see `src/components/FlightPathOverview/INSTRUCTIONS.md` for the full explanation of why the `0 → 1` step counts as an extra position.
+The sequential `plane-position` range is `0` through `topics.length` (i.e. `max` = number of entries in the `topics` array, including the departure label). See `src/components/FlightPathOverview/INSTRUCTIONS.md` for details.
