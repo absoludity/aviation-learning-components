@@ -5,8 +5,9 @@ interface NavEntry {
 }
 
 const NAV: NavEntry[] = [
-  { slug: 'four-forces',       label: 'Four Forces',        href: '/open-aviation-components/four-forces/' },
-  { slug: 'climb-performance', label: 'Climb Performance',  href: '/open-aviation-components/climb-performance/' },
+  { slug: 'four-forces',          label: 'Four Forces',           href: '/open-aviation-components/four-forces/' },
+  { slug: 'climb-performance',    label: 'Climb Performance',     href: '/open-aviation-components/climb-performance/' },
+  { slug: 'flight-path-overview', label: 'Flight Path Overview',  href: '/open-aviation-components/flight-path-overview/' },
 ]
 
 export function renderSidebar(activeSlug: string | null): void {

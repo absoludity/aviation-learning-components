@@ -9,9 +9,10 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        index:            resolve(__dirname, 'website/index.html'),
-        fourForces:       resolve(__dirname, 'website/four-forces/index.html'),
-        climbPerformance: resolve(__dirname, 'website/climb-performance/index.html'),
+        index:               resolve(__dirname, 'website/index.html'),
+        fourForces:          resolve(__dirname, 'website/four-forces/index.html'),
+        climbPerformance:    resolve(__dirname, 'website/climb-performance/index.html'),
+        flightPathOverview:  resolve(__dirname, 'website/flight-path-overview/index.html'),
       },
     },
   },

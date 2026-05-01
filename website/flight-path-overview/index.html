@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FlightPathOverview — Open Aviation Components</title>
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      body { font-family: system-ui, sans-serif; background: #0f172a; color: #e2e8f0; height: 100vh; }
+      .fpo-controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+        margin: 16px 0;
+      }
+      .fpo-controls input[type="range"] { flex: 1; min-width: 200px; accent-color: #38bdf8; }
+      .fpo-controls button {
+        background: #1e293b; color: #e2e8f0; border: 1px solid #334155;
+        padding: 6px 12px; border-radius: 4px; cursor: pointer; font: inherit;
+      }
+      .fpo-controls button:hover { background: #334155; }
+      .fpo-controls code { background: #1e293b; padding: 2px 6px; border-radius: 3px; }
+    </style>
+  </head>
+  <body>
+    <div class="layout">
+      <nav class="sidebar" id="sidebar"></nav>
+      <main class="content">
+        <div class="page">
+          <h1>FlightPathOverview</h1>
+          <p class="description">
+            A pure-SVG visualisation of a flight plan as a sequence of <em>lesson topics</em> —
+            departure runway on the left, arrival runway on the right, and a dashed flight path
+            with numbered waypoints between them. As the plane advances through the topics, the
+            actual elapsed time is recorded against the planned time and a variance indicator
+            shows whether the lesson is on track.
+          </p>
+
+          <div class="demo-container">
+            <flight-path-overview id="fpo" arrival-label="Arrival"></flight-path-overview>
+          </div>
+
+          <div class="fpo-controls">
+            <button id="prev">← Prev</button>
+            <input id="pos" type="range" min="0" max="7" step="1" value="0" />
+            <button id="next">Next →</button>
+            <span>Position: <code id="posLabel">0</code></span>
+            <button id="resetTimer">Reset timer</button>
+            <button id="resetPlan">Reset plan</button>
+          </div>
+
+          <h2>Usage</h2>
+          <pre class="code"><code>import 'open-aviation-components'
+
+const fpo = document.querySelector('flight-path-overview')
+fpo.topics = [
+  { label: 'Overview', time: 1 },
+  { label: 'Risk Analysis\nI\'M SAFE &amp; PAVE', time: 3 },
+  // ...
+]
+fpo.setAttribute('plane-position', '2')</code></pre>
+
+          <h2>Properties and attributes</h2>
+          <table>
+            <thead>
+              <tr><th>Name</th><th>Kind</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>topics</code></td>
+                <td>property</td>
+                <td>
+                  Array of <code>{ label, time?, color?, labelColor? }</code>. <code>topics[0]</code>
+                  is the departure label; the rest are waypoints. Each <code>time</code> is the
+                  duration in minutes of the segment <em>after</em> that topic. Use <code>\n</code>
+                  in <code>label</code> for line breaks. Set as a DOM property: complex values
+                  cannot be passed as attributes.
+                </td>
+              </tr>
+              <tr>
+                <td><code>plane-position</code></td>
+                <td>attribute</td>
+                <td>
+                  Integer position of the plane: <code>0</code> = at the departure runway,
+                  <code>1..N</code> = at waypoint <em>i</em>, <code>N+1</code> = at the arrival
+                  runway. The plane animates between positions with a 600 ms cubic ease-out.
+                </td>
+              </tr>
+              <tr>
+                <td><code>arrival-label</code></td>
+                <td>attribute</td>
+                <td>Label shown under the right runway. Defaults to <code>ARRIVAL</code>.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h2>Shared state</h2>
+          <p>
+            All <code>&lt;flight-path-overview&gt;</code> elements on a page share the same plan
+            and the same recorded actual times — useful when consecutive slides show the same
+            flight at different positions. The first transition <code>0 → 1</code> records the
+            departure timestamp; subsequent transitions record per-waypoint actuals. Use
+            <code>resetTimer()</code> / <code>resetFlightPlan()</code> from the package to clear.
+          </p>
+        </div>
+      </main>
+    </div>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>
