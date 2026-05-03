@@ -5,7 +5,7 @@
  */
 
 import styles from './index.css?inline'
-import piperSvgRaw from './piper.svg?raw'
+import planeSvgRaw from './plane.svg?raw'
 import {
   type Topic,
   getDepartureTime,
@@ -14,6 +14,8 @@ import {
   getVarianceMinutes,
   getFlightTopics,
   getFlightArrivalLabel,
+  getPlaneImage,
+  setPlaneImage,
   setWaypointActual,
   setArrivalActual,
   setVariance,
@@ -46,8 +48,8 @@ const PALETTE: Array<{ fill: string; labelColor: string }> = [
   { fill: '#1d4ed8', labelColor: '#1e3a8a' },
 ]
 
-// piper.svg is bundled as a data URL — keeps the library self-contained.
-const PIPER_DATA_URL = 'data:image/svg+xml;utf8,' + encodeURIComponent(piperSvgRaw)
+// plane.svg is bundled as a data URL — keeps the library self-contained.
+const DEFAULT_PLANE_DATA_URL = 'data:image/svg+xml;utf8,' + encodeURIComponent(planeSvgRaw)
 
 interface Waypoint {
   x: number
@@ -150,12 +152,12 @@ function getTargetForPosition(
   pos: number,
 ): { x: number; y: number; angle: number } {
   if (pos <= 0) {
-    return { x: 50, y: 247, angle: 0 }
+    return { x: 50, y: 242, angle: 0 }
   } else if (pos > waypoints.length) {
-    return { x: 850, y: 247, angle: 0 }
+    return { x: 850, y: 242, angle: 0 }
   } else {
     const waypoint = waypoints[pos - 1]
-    return { x: waypoint.x, y: CRUISE_Y - CIRCLE_R - 5, angle: 0 }
+    return { x: waypoint.x, y: CRUISE_Y - CIRCLE_R - 10, angle: 0 }
   }
 }
 
@@ -166,14 +168,14 @@ function setAttrs(element: SVGElement, attrs: Record<string, string | number>): 
 }
 
 class FlightPathOverviewElement extends HTMLElement {
-  static observedAttributes = ['plane-position', 'arrival-label']
+  static observedAttributes = ['plane-position', 'arrival-label', 'plane-image']
 
   private _topics: Topic[] | null = null
   private _planePosition = 0
   private _arrivalLabel: string | null = null
 
   private _animX = 50
-  private _animY = 247
+  private _animY = 242
   private _animAngle = 0
   private _rafId: number | null = null
   private _unsubscribe: (() => void) | null = null
@@ -184,6 +186,7 @@ class FlightPathOverviewElement extends HTMLElement {
   private _gDepartLabel!: SVGGElement
   private _arrivalText!: SVGTextElement
   private _gPlane!: SVGGElement
+  private _planeImageEl!: SVGImageElement
   private _gFooter!: SVGGElement
   private _gTimings!: SVGGElement
 
@@ -304,15 +307,16 @@ class FlightPathOverviewElement extends HTMLElement {
     const gPlane = document.createElementNS(SVG_NS, 'g')
     const planeImage = document.createElementNS(SVG_NS, 'image')
     setAttrs(planeImage, {
-      href: PIPER_DATA_URL,
+      href: DEFAULT_PLANE_DATA_URL,
       width: 68,
       height: 27,
       x: -34,
       y: -18,
       filter: 'url(#piper-tint)',
     })
-    planeImage.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', PIPER_DATA_URL)
+    planeImage.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', DEFAULT_PLANE_DATA_URL)
     gPlane.appendChild(planeImage)
+    this._planeImageEl = planeImage
     this._gPlane = gPlane
     svg.appendChild(gPlane)
 
@@ -410,6 +414,8 @@ class FlightPathOverviewElement extends HTMLElement {
         this._renderStructural()
         this._renderTransform()
       }
+    } else if (name === 'plane-image') {
+      setPlaneImage(value)
     }
   }
 
@@ -603,6 +609,10 @@ class FlightPathOverviewElement extends HTMLElement {
       'transform',
       `translate(${this._animX}, ${this._animY}) rotate(${this._animAngle})`,
     )
+
+    const planeImageUrl = getPlaneImage() ?? DEFAULT_PLANE_DATA_URL
+    this._planeImageEl.setAttribute('href', planeImageUrl)
+    this._planeImageEl.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', planeImageUrl)
 
     const topics = this._resolvedTopics
     const departureTime = getDepartureTime()

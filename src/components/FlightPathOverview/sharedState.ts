@@ -21,6 +21,7 @@ let _actualArrivalTime: number | null = null
 let _varianceMinutes: number | null = null
 let _flightTopics: Topic[] | null = null
 let _flightArrivalLabel: string = 'ARRIVAL'
+let _planeImage: string | null = null
 
 const _subscribers = new Set<() => void>()
 
@@ -34,6 +35,7 @@ export function getActualArrivalTime(): number | null { return _actualArrivalTim
 export function getVarianceMinutes(): number | null { return _varianceMinutes }
 export function getFlightTopics(): Topic[] | null { return _flightTopics }
 export function getFlightArrivalLabel(): string { return _flightArrivalLabel }
+export function getPlaneImage(): string | null { return _planeImage }
 
 export function setEstimatedTimes(departureTime?: number): void {
   const t = departureTime ?? Date.now()
@@ -62,6 +64,12 @@ export function setVariance(v: number | null): void {
   notify()
 }
 
+export function setPlaneImage(url: string | null): void {
+  if (_planeImage === url) return
+  _planeImage = url
+  notify()
+}
+
 export function seedPlan(topics: Topic[], arrivalLabel: string): void {
   let changed = false
   if (_flightTopics !== topics) { _flightTopics = topics; changed = true }
@@ -80,6 +88,7 @@ export function resetTimer(): void {
 export function resetFlightPlan(): void {
   _flightTopics = null
   _flightArrivalLabel = 'ARRIVAL'
+  _planeImage = null
   resetTimer()  // resetTimer also calls notify
 }
 

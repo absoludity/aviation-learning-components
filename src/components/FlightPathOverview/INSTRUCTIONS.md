@@ -33,6 +33,10 @@ The SVG has an intrinsic `viewBox="0 0 900 362"` and scales to its container's w
   `setEstimatedTimes()` has been called.
 - **`arrival-label`** attribute (string, default `ARRIVAL`): label shown under
   the right runway.
+- **`plane-image`** attribute (string, URL): image source for the plane icon.
+  Accepts any URL including data URLs. Stored in shared state — whichever
+  instance sets it first applies it to all instances on the page. Resets with
+  `resetFlightPlan()`. Defaults to the bundled piper SVG.
 
 ## Starting the timer
 
