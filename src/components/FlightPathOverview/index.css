@@ -1,0 +1,19 @@
+:host {
+  display: block;
+}
+
+svg {
+  display: block;
+  width: 100%;
+  aspect-ratio: 900 / 362;
+  background: white;
+  border-radius: 8px;
+}
+
+.wp-label    { font: 600 13px ui-sans-serif, system-ui, sans-serif; }
+.wp-badge    { font: 700 13px ui-sans-serif, system-ui, sans-serif; }
+.rwy-text    { font: 600 10px ui-sans-serif, system-ui, sans-serif; fill: #64748b; letter-spacing: 0.5px; }
+.seg-time    { font: 600 11px ui-sans-serif, system-ui, sans-serif; fill: #64748b; }
+.footer      { font: 700 13px ui-sans-serif, system-ui, sans-serif; fill: #475569; }
+.wp-time     { font: 600 10px ui-sans-serif, system-ui, sans-serif; fill: #0369a1; }
+.timing-label{ font: 700 10px ui-sans-serif, system-ui, sans-serif; fill: #64748b; }

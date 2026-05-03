@@ -4,3 +4,10 @@
 
 export { FourForcesElement } from './components/FourForces'
 export { ClimbPerformanceElement } from './components/ClimbPerformance'
+export { FlightPathOverviewElement } from './components/FlightPathOverview'
+export {
+  setEstimatedTimes,
+  resetTimer,
+  resetFlightPlan,
+  type Topic,
+} from './components/FlightPathOverview/sharedState'
