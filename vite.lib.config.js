@@ -13,7 +13,7 @@ export default defineConfig({
       formats: ['es', 'umd'],
     },
     rollupOptions: {
-      external: ['three'],
+      external: ['three', /^three\//],
       output: {
         globals: { three: 'THREE' },
       },

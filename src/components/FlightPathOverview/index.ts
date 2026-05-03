@@ -696,7 +696,4 @@ class FlightPathOverviewElement extends HTMLElement {
   }
 }
 
-if (!customElements.get('flight-path-overview')) {
-  customElements.define('flight-path-overview', FlightPathOverviewElement)
-}
 export { FlightPathOverviewElement }

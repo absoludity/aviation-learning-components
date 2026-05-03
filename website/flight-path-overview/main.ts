@@ -1,6 +1,6 @@
 import '../demo/shared.css'
 import { renderSidebar } from '../demo/sidebar'
-import '../../src/components/FlightPathOverview'
+import '../../src/define'
 import { setEstimatedTimes, resetTimer, resetFlightPlan } from '../../src/components/FlightPathOverview/sharedState'
 
 renderSidebar('flight-path-overview')

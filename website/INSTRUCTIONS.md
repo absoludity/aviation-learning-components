@@ -8,25 +8,21 @@ The `website/` directory is the Vite root for the demo site. It is not part of t
 2. Add a `rollupOptions.input` entry in `vite.config.js`.
 3. Append a `NAV` entry in `website/demo/sidebar.ts` (single source of truth for nav links).
 
-## Side-effect import pattern
+## Registration pattern
 
-Each demo `main.ts` **must** import the component source as a side-effect import, not as a named import:
+Each demo `main.ts` registers all components via the side-effect import of `src/define`:
 
 ```ts
-// ✓ correct — import is preserved, customElements.define() runs
-import '../../src/components/FlightPathOverview'
-
-// ✗ wrong — esbuild/Vite strips this if FlightPathOverviewElement is only
-//   used in a TypeScript type cast (e.g. "as FlightPathOverviewElement"),
-//   so customElements.define() never runs and the element is never upgraded
-import { FlightPathOverviewElement } from '../../src/components/FlightPathOverview'
+import '../../src/define'
 ```
 
-If the class type is needed for TypeScript, use `import type` separately and keep the side-effect import:
+This is the demo equivalent of the published `./define` entry point. Component class files no longer call `customElements.define()` themselves — registration is explicit.
+
+If the class type is needed for TypeScript, import it separately with `import type`:
 
 ```ts
+import '../../src/define'
 import type { FlightPathOverviewElement } from '../../src/components/FlightPathOverview'
-import '../../src/components/FlightPathOverview'
 ```
 
 ## Slider max for flight-path-overview demos

@@ -1315,8 +1315,4 @@ class FourForcesElement extends HTMLElement {
   }
 }
 
-if (!customElements.get('four-forces')) {
-  customElements.define('four-forces', FourForcesElement)
-}
-
 export { FourForcesElement }
