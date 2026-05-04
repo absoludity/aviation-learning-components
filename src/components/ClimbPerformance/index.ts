@@ -668,4 +668,3 @@ export class ClimbPerformanceElement extends HTMLElement {
   }
 }
 
-customElements.define('climb-performance', ClimbPerformanceElement)

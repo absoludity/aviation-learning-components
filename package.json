@@ -8,7 +8,8 @@
     ".": {
       "import": "./dist/lib/open-aviation-components.es.js",
       "require": "./dist/lib/open-aviation-components.umd.js"
-    }
+    },
+    "./define": "./dist/lib/define.es.js"
   },
   "types": "./dist/lib/index.d.ts",
   "files": [
@@ -22,17 +23,20 @@
     "url": "git+https://github.com/Open-Aviation-Solutions/open-aviation-components.git"
   },
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "build:lib": "vite build --config vite.lib.config.js",
+    "dev": "astro dev",
+    "build": "astro build",
+    "build:lib": "vite build --config vite.lib.config.js && vite build --config vite.define.config.js",
     "typecheck": "tsc --noEmit",
-    "preview": "vite preview"
+    "preview": "astro preview"
   },
   "peerDependencies": {
     "three": ">=0.184.0"
   },
   "devDependencies": {
+    "@astrojs/starlight": "^0.38.4",
     "@types/three": "^0.184.0",
+    "astro": "^6.2.1",
+    "sharp": "^0.34.5",
     "three": "^0.184.0",
     "typescript": "^6.0.3",
     "vite": "^5.4.0",

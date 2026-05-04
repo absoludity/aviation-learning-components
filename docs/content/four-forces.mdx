@@ -1,0 +1,42 @@
+---
+title: FourForces
+description: An interactive 3D visualization of the four aerodynamic forces — Lift, Weight, Thrust, and Drag — shown as arrows on an aircraft model.
+---
+
+import FourForces from '../components/FourForces.astro'
+
+An interactive 3D visualization of the four aerodynamic forces — Lift, Weight, Thrust, and Drag — shown as arrows on an aircraft model. Power and Attitude sliders drive a physics model; the arrows scale dynamically to reflect the force balance. Includes ASI and VSI instrument gauges, airflow particle stream, and weight-component decomposition during climbs. Supports cross-tab synchronization via BroadcastChannel for presenter/slide pairing.
+
+<FourForces />
+
+<small>Aircraft: <a href="https://sketchfab.com/3d-models/bristol-f2b-first-world-war-airplane-1df44f8ecf0b4b3888e07f841c1197ce" target="_blank" rel="noopener">Bristol F.2B (First World War)</a> — public domain, Canadian Ingenium museum</small>
+
+## Usage
+
+```html
+<script type="module">
+  import 'https://unpkg.com/@open-aviation-solutions/components/dist/lib/define.es.js';
+</script>
+
+<four-forces height="400px" model-path="/path/to/aircraft.glb"></four-forces>
+```
+
+## Attributes
+
+| Attribute | Default | Description |
+|-----------|---------|-------------|
+| `height` | `400px` | CSS height of the component |
+| `model-path` | `/aircraft.glb` | URL to the GLTF aircraft model file |
+| `v_ne` | — | Never-exceed speed (kts). Sets ASI scale maximum and draws red radial line |
+| `v_no` | — | Normal operating speed (kts). Top of green arc, bottom of yellow arc |
+| `v_1` | — | Stall speed clean (kts). Bottom of green arc |
+| `cruise-kts` | `100` | Airspeed at nominal cruise. Calibrates the ASI needle to the aircraft's actual speed range |
+| `banking` | — | Boolean. When present, shows a bank angle slider. Banking tilts the lift vector and displays its vertical and horizontal components |
+
+## Dependencies
+
+Requires `three` (≥ 0.184) as a peer dependency:
+
+```bash
+npm install three @open-aviation-solutions/components
+```

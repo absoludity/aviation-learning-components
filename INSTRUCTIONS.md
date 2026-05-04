@@ -5,9 +5,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```bash
-npm run dev       # Start Vite dev server (http://localhost:5173/open-aviation-components/)
-npm run build     # Build demo app + library to dist/
-npm run preview   # Preview production build locally
+npm run dev         # Start Astro dev server (http://localhost:4321/open-aviation-components/)
+npm run build       # Build docs site to dist/ (Astro)
+npm run preview     # Preview production build locally
+npm run build:lib   # Build library to dist/lib/ (Vite — unchanged)
+npm run typecheck   # Type-check library source (src/ only)
 ```
 
 No test or lint commands are configured.
@@ -24,11 +26,16 @@ Do **not** add `Co-Authored-By` trailers. The developer is solely responsible fo
 
 This is a **web component library** for interactive aviation training visualizations, deployed as a GitHub Pages demo at https://open-aviation-solutions.github.io/open-aviation-components/.
 
-**Stack:** Vite + Three.js (3D rendering). Components are plain custom elements (`HTMLElement` subclasses). No framework dependency — the library and demo are both vanilla JS.
+**Library stack:** Vite + Three.js (3D rendering). Components are plain custom elements (`HTMLElement` subclasses). No framework dependency.
 
-**Library entry:** `src/index.js` registers `FourForces` — the only component so far.
+**Library entry:** `src/index.ts` — exports component classes. `src/define.ts` — registers all custom elements (side-effect import).
 
-**Website** (demo + landing page) lives entirely under `website/`. The landing page is `website/index.html`. Each component demo lives in its own subdirectory (e.g. `website/four-forces/index.html` + `website/four-forces/main.ts`). Shared infrastructure — `website/demo/shared.css`, `website/demo/sidebar.ts` (single source of truth for nav entries), and `website/demo/landing.ts` — lives under `website/demo/`. Static assets served from `website/public/`. Each component demo's `main.ts` imports `shared.css`, calls `renderSidebar(<slug>)`, and wires up any per-page controls. Adding a new component means adding a `website/<slug>/` directory with `index.html` + `main.ts`, declaring it as a Vite input in `vite.config.js`, and appending an entry to the `NAV` array in `website/demo/sidebar.ts`. The website is not part of the library distribution.
+**Website** (docs + live demos) is an Astro + Starlight site under `docs/`. The Astro config is `astro.config.mjs` at the repo root, with `srcDir: './docs/src'` and `publicDir: './docs/public'`. Content pages (MDX) live at `docs/src/content/docs/`. Web component wrappers live at `docs/src/components/` as `.astro` files. The website is not part of the library distribution.
+
+**Adding a new component page:**
+1. Create `docs/src/components/<ComponentName>.astro` — place the custom element tag in the template; add a `<script>` block that imports `'../../../src/define'` (three hops from `docs/src/components/` to `src/`).
+2. Create `docs/src/content/docs/<slug>.mdx` — import the wrapper with `import <ComponentName> from '../../components/<ComponentName>.astro'` and embed `<ComponentName />`.
+3. Add a sidebar entry in `astro.config.mjs` under the Components group: `{ label: '...', slug: '<slug>' }`.
 
 Component-specific instructions live alongside each component's source (e.g. `src/components/FourForces/INSTRUCTIONS.md`).
 
@@ -36,10 +43,11 @@ Component-specific instructions live alongside each component's source (e.g. `sr
 
 - **Component source directory:** `src/components/<ComponentName>/` — PascalCase matching the class name (e.g. `FourForces/`)
 - **Component CSS:** `src/components/<ComponentName>/index.css` — always `index.css`, not a named file
-- **Demo directory:** `website/<slug>/` — kebab-case matching the HTML element tag (e.g. `website/four-forces/`)
-- **Nav slug** in `website/demo/sidebar.ts`: kebab-case matching the demo directory name (e.g. `'four-forces'`)
+- **Astro wrapper:** `docs/src/components/<ComponentName>.astro` — PascalCase matching the class name
+- **MDX page:** `docs/src/content/docs/<slug>.mdx` — kebab-case matching the HTML element tag
+- **Sidebar slug** in `astro.config.mjs`: kebab-case matching the MDX filename (e.g. `'four-forces'`)
 - **HTML custom element tag:** kebab-case per the HTML spec (e.g. `<four-forces>`)
 
-### Deployment
+## Deployment
 
-`vite.config.js` sets `base: '/open-aviation-components/'` for GitHub Pages. The `dist/` output of `npm run build` is what gets deployed.
+`astro.config.mjs` sets `base: '/open-aviation-components'` and `outDir: './dist'`. The `dist/` output of `npm run build` is deployed to GitHub Pages by the existing `deploy.yml` workflow without modification. Static assets (e.g. `aircraft.glb`) go in `docs/public/` and are served at `/open-aviation-components/<filename>`.
