@@ -1,0 +1,15 @@
+---
+import { base } from 'astro:config/client'
+import { getCollection } from 'astro:content'
+
+const entries = (await getCollection('docs'))
+  .filter(entry => entry.id !== 'index')
+  .sort((a, b) => a.data.title.localeCompare(b.data.title))
+---
+
+{entries.map(entry => (
+  <section>
+    <h2><a href={`${base}/${entry.id}/`}>{entry.data.title}</a></h2>
+    {entry.data.description && <p>{entry.data.description}</p>}
+  </section>
+))}
