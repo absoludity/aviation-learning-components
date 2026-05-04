@@ -1,0 +1,48 @@
+---
+title: FlightPathOverview
+description: A pure-SVG visualization of a flight plan as a sequence of lesson topics, with animated waypoint progression and variance tracking.
+---
+
+import FlightPathOverview from '../components/FlightPathOverview.astro'
+
+A pure-SVG visualisation of a flight plan as a sequence of *lesson topics* — departure runway on the left, arrival runway on the right, and a dashed flight path with numbered waypoints between them. As the plane advances through the topics, the actual elapsed time is recorded against the planned time and a variance indicator shows whether the lesson is on track.
+
+<FlightPathOverview />
+
+## Usage
+
+```html
+<script type="module">
+  import 'https://unpkg.com/@open-aviation-solutions/components/dist/lib/define.es.js';
+</script>
+
+<flight-path-overview arrival-label="Arrival"></flight-path-overview>
+
+<script type="module">
+  const fpo = document.querySelector('flight-path-overview')
+  fpo.topics = [
+    { label: 'Overview', time: 1 },
+    { label: "Risk Analysis", time: 3 },
+    // ...
+  ]
+  fpo.setAttribute('plane-position', '2')
+</script>
+```
+
+## Properties and attributes
+
+| Name | Kind | Description |
+|------|------|-------------|
+| `topics` | property | Array of `{ label, time?, color?, labelColor? }`. `topics[0]` is the departure label; the rest are waypoints. Each `time` is the duration in minutes of the segment *after* that topic. Use `\n` in `label` for line breaks. Must be set as a DOM property — complex values cannot be passed as attributes |
+| `plane-position` | attribute | Integer position of the plane: `0` = departure runway, `1..N` = at waypoint *i*, `N+1` = arrival runway. Animates between positions with a 600 ms cubic ease-out |
+| `arrival-label` | attribute | Label shown under the right runway. Defaults to `ARRIVAL` |
+
+## Installation
+
+```bash
+npm install @open-aviation-solutions/components
+```
+
+## Shared state
+
+All `<flight-path-overview>` elements on a page share the same plan and the same recorded actual times — useful when consecutive slides show the same flight at different positions. The first transition `0 → 1` records the departure timestamp; subsequent transitions record per-waypoint actuals. Import `resetTimer()` / `resetFlightPlan()` from the package to clear.

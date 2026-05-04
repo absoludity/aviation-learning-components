@@ -9,5 +9,5 @@
     "declarationDir": "dist/lib",
     "noEmit": true
   },
-  "include": ["src/**/*.ts", "website/**/*.ts"]
+  "include": ["src/**/*.ts"]
 }

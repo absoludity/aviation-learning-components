@@ -1,0 +1,41 @@
+/* Catppuccin Mocha */
+:root[data-theme='dark'] {
+  --sl-color-accent-low:  #45475a;  /* Surface1  */
+  --sl-color-accent:      #cba6f7;  /* Mauve     */
+  --sl-color-accent-high: #f5c2e7;  /* Pink      */
+
+  --sl-color-bg:             #1e1e2e;  /* Base    */
+  --sl-color-bg-nav:         #181825;  /* Mantle  */
+  --sl-color-bg-sidebar:     #181825;  /* Mantle  */
+  --sl-color-bg-inline-code: #313244;  /* Surface0 */
+  --sl-color-hairline:       rgba(203, 166, 247, 0.15);
+
+  --sl-color-gray-1: #cdd6f4;  /* Text      */
+  --sl-color-gray-2: #bac2de;  /* Subtext1  */
+  --sl-color-gray-3: #9399b2;  /* Overlay2  */
+  --sl-color-gray-4: #585b70;  /* Surface2  */
+  --sl-color-gray-5: #45475a;  /* Surface1  */
+  --sl-color-gray-6: #313244;  /* Surface0  */
+  --sl-color-gray-7: #1e1e2e;  /* Base      */
+}
+
+/* Catppuccin Latte */
+:root[data-theme='light'] {
+  --sl-color-accent-low:  #e6e9ef;  /* Mantle  */
+  --sl-color-accent:      #8839ef;  /* Mauve   */
+  --sl-color-accent-high: #5c2d9e;  /* darker  */
+
+  --sl-color-bg:             #eff1f5;  /* Base    */
+  --sl-color-bg-nav:         #e6e9ef;  /* Mantle  */
+  --sl-color-bg-sidebar:     #e6e9ef;  /* Mantle  */
+  --sl-color-bg-inline-code: #ccd0da;  /* Surface0 */
+  --sl-color-hairline:       rgba(136, 57, 239, 0.15);
+
+  --sl-color-gray-1: #4c4f69;  /* Text      */
+  --sl-color-gray-2: #5c5f77;  /* Subtext1  */
+  --sl-color-gray-3: #7c7f93;  /* Overlay2  */
+  --sl-color-gray-4: #acb0be;  /* Surface2  */
+  --sl-color-gray-5: #ccd0da;  /* Surface0  */
+  --sl-color-gray-6: #e6e9ef;  /* Mantle    */
+  --sl-color-gray-7: #eff1f5;  /* Base      */
+}
