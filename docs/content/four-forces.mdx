@@ -1,11 +1,14 @@
 ---
-title: FourForces
+title: Four Forces
 description: An interactive 3D visualization of the four aerodynamic forces — Lift, Weight, Thrust, and Drag — shown as arrows on an aircraft model.
 ---
 
 import FourForces from '../components/FourForces.astro'
+import ComponentDescription from '../components/ComponentDescription.astro'
 
-An interactive 3D visualization of the four aerodynamic forces — Lift, Weight, Thrust, and Drag — shown as arrows on an aircraft model. Power and Attitude sliders drive a physics model; the arrows scale dynamically to reflect the force balance. Includes ASI and VSI instrument gauges, airflow particle stream, and weight-component decomposition during climbs. Supports cross-tab synchronization via BroadcastChannel for presenter/slide pairing.
+<ComponentDescription />
+
+Power and Attitude sliders drive a physics model; the arrows scale dynamically to reflect the force balance. Includes ASI and VSI instrument gauges, airflow particle stream, and weight-component decomposition during climbs. Supports cross-tab synchronization via BroadcastChannel for presenter/slide pairing.
 
 <FourForces />
 

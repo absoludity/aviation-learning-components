@@ -1,11 +1,14 @@
 ---
-title: FlightPathOverview
-description: A pure-SVG visualization of a flight plan as a sequence of lesson topics, with animated waypoint progression and variance tracking.
+title: Flight Path Overview
+description: A pure-SVG visualisation of a flight plan as a sequence of lesson topics — departure runway on the left, arrival runway on the right, and a dashed flight path with numbered waypoints between them.
 ---
 
 import FlightPathOverview from '../components/FlightPathOverview.astro'
+import ComponentDescription from '../components/ComponentDescription.astro'
 
-A pure-SVG visualisation of a flight plan as a sequence of *lesson topics* — departure runway on the left, arrival runway on the right, and a dashed flight path with numbered waypoints between them. As the plane advances through the topics, the actual elapsed time is recorded against the planned time and a variance indicator shows whether the lesson is on track.
+<ComponentDescription />
+
+The departure runway sits on the left, arrival on the right, with a dashed flight path and numbered *lesson topic* waypoints between them. As the plane advances through the topics, the actual elapsed time is recorded against the planned time and a variance indicator shows whether the lesson is on track.
 
 <FlightPathOverview />
 
